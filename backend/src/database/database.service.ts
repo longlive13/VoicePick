@@ -1,20 +1,23 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, Client } from '@libsql/client';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
   private client: Client;
 
   constructor(private readonly configService: ConfigService) {
-    const url = this.configService.get<string>('DATABASE_URL');
+    const dbAbsolutePath = path.resolve(process.cwd(), 'storage', 'dubbing.db');
+    const dbUrl = `file:${dbAbsolutePath}`;
 
-    if (!url) {
-      throw new Error('DATABASE_URL is not set');
-    }
+    console.log('process.cwd():', process.cwd());
+    console.log('DB absolute path:', dbAbsolutePath);
+    console.log('DB exists:', fs.existsSync(dbAbsolutePath));
 
     this.client = createClient({
-      url,
+      url: dbUrl,
     });
   }
 

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,6 +15,7 @@ import { diskStorage } from 'multer';
 import { DubbingService } from '../service/dubbing.service';
 import { MediaService } from '../service/media.service';
 import { DubbingRequestDto } from '../dto/dubbing-request.dto';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @Controller('dubbing')
 export class DubbingController {
@@ -31,6 +33,7 @@ export class DubbingController {
     return this.dubbingService.getDubbingResultById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
