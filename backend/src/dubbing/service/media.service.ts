@@ -24,13 +24,13 @@ export class MediaService {
     const videoExtensions = ['.mp4', '.mov', '.avi'];
 
     if (audioExtensions.includes(extension)) {
-      return filePath;
+      return this.cropAudio(filePath);
     }
 
     if (videoExtensions.includes(extension)) {
-      return this.extractAudioFromVideo(filePath);
+      const extracted = await this.extractAudioFromVideo(filePath);
+      return this.cropAudio(extracted);
     }
-
     throw new BadRequestException('지원하지 않는 파일 형식입니다.');
   }
 
@@ -50,6 +50,23 @@ export class MediaService {
       return outputPath;
     } catch (error) {
       throw new BadRequestException('비디오에서 오디오 추출에 실패했습니다.');
+    }
+  }
+  private async cropAudio(inputPath: string): Promise<string> {
+    const fileNameWithoutExt = basename(inputPath, extname(inputPath));
+    const outputPath = join(
+      process.cwd(),
+      'storage',
+      'temp',
+      `${fileNameWithoutExt}_cropped.mp3`,
+    );
+    const command = `ffmpeg -y -i "${inputPath}" -t 60 "${outputPath}"`;
+
+    try {
+      await execAsync(command);
+      return outputPath;
+    } catch (error) {
+      throw new BadRequestException('오디오 자르기에 실패했습니다.');
     }
   }
 }

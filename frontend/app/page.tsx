@@ -82,7 +82,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6f2eb] flex items-center justify-center px-4 py-10">
+    <main className="min-h-screen flex items-center justify-center px-4 py-10 bg-cover bg-center" 
+    style={{ backgroundImage: "url('/bg-image.png')", backgroundColor: "rgba(0,0,0,0.3)", backgroundBlendMode: "darken",}}>
       <div className="w-full max-w-3xl rounded-[36px] border border-[#e2c79b] bg-white/90 shadow-[0_10px_30px_rgba(0,0,0,0.08)] px-8 py-10">
         <h1 className="text-center text-4xl font-bold text-[#d46b1f]">
           Voice Conversion
