@@ -8,7 +8,7 @@ import { TranscriptionService } from './service/transcription.service';
 import { TranslationService } from './service/translation.service';
 import { SynthesisService } from './service/synthesis.service';
 import { DatabaseService } from '../database/database.service';
-import { AuthGuard } from 'src/auth/auth.guard';  
+import { AuthGuard } from '../auth/auth.guard';  
 
 @Module({
   imports: [
