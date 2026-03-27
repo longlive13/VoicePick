@@ -29,7 +29,7 @@ export class DubbingService {
     targetLanguage: string;
   }) {
     const db = this.databaseService.getClient();
-    const uploadedFilePath = `storage/uploads/${params.savedFilename}`;
+    const uploadedFilePath = `/tmp/uploads/${params.savedFilename}`;
     const audioPath = await this.mediaService.prepareAudio(uploadedFilePath);
     const transcript = await this.transcriptionService.transcribe(audioPath);
     const translatedText = await this.translationService.translateText(
