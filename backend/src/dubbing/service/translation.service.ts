@@ -20,7 +20,7 @@ export class TranslationService {
 
     try {
       const response = await this.client.responses.create({
-        model: 'gpt-5.4',
+        model: 'gpt-4o',
         input: [
           {
             role: 'system',

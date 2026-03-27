@@ -9,21 +9,22 @@ export class DatabaseService implements OnModuleInit {
   private client: Client;
 
   constructor(private readonly configService: ConfigService) {
-    const dbAbsolutePath = path.resolve(process.cwd(), 'storage', 'dubbing.db');
-    const dbUrl = `file:${dbAbsolutePath}`;
-
-    console.log('process.cwd():', process.cwd());
-    console.log('DB absolute path:', dbAbsolutePath);
-    console.log('DB exists:', fs.existsSync(dbAbsolutePath));
+    const url = this.configService.get<string>('DATABASE_URL');
+    const authToken = this.configService.get<string>('DATABASE_AUTH_TOKEN');
 
     this.client = createClient({
-      url: dbUrl,
+      url: url!,
+      authToken: authToken, 
     });
   }
 
   async onModuleInit() {
-    await this.client.execute('SELECT 1');
-    console.log('✅ Database connected');
+    try {
+      await this.client.execute('SELECT 1');
+      console.log('✅ Turso Database connected');
+    } catch (e) {
+      console.error('❌ Database connection failed:', e);
+    }
   }
 
   getClient(): Client {
