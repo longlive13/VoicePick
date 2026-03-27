@@ -26,6 +26,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
     TranslationService,
     SynthesisService,
     DatabaseService,
+    AuthGuard,
   ],
 })
 export class DubbingModule {}

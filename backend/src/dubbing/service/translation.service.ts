@@ -3,10 +3,6 @@ import OpenAI from 'openai';
 
 @Injectable()
 export class TranslationService {
-  private client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
   async translateText(text: string, targetLanguage: string): Promise<string> {
     if (!process.env.OPENAI_API_KEY) {
       throw new InternalServerErrorException(
@@ -18,8 +14,12 @@ export class TranslationService {
       return '';
     }
 
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     try {
-      const response = await this.client.responses.create({
+      const response = await client.responses.create({
         model: 'gpt-4o',
         input: [
           {
@@ -37,9 +37,7 @@ export class TranslationService {
       const translatedText = response.output_text?.trim();
 
       if (!translatedText) {
-        throw new InternalServerErrorException(
-          '번역 결과가 비어 있습니다.',
-        );
+        throw new InternalServerErrorException('번역 결과가 비어 있습니다.');
       }
 
       return translatedText;
