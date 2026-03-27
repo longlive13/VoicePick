@@ -5,6 +5,10 @@ import * as path from 'path';
 
 @Injectable()
 export class SynthesisService {
+  constructor() {
+    fs.mkdirSync('/tmp/outputs', { recursive: true });
+  }
+
   async synthesizeToFile(
     text: string,
     outputFilename: string,
@@ -28,12 +32,7 @@ export class SynthesisService {
       throw new InternalServerErrorException('합성할 텍스트가 비어 있습니다.');
     }
 
-    const outputPath = path.join(
-      process.cwd(),
-      'storage',
-      'outputs',
-      outputFilename,
-    );
+    const outputPath = path.join('/tmp', 'outputs', outputFilename);
 
     try {
       const response = await axios.post(
@@ -53,7 +52,6 @@ export class SynthesisService {
       );
 
       fs.writeFileSync(outputPath, response.data);
-
       return outputPath;
     } catch (error: any) {
       console.error(

@@ -13,7 +13,7 @@ import * as path from 'path';
 export class FilesController {
   @Get(':filename')
   streamFile(@Param('filename') filename: string, @Res() res: Response) {
-    const filePath = path.join(process.cwd(), 'storage', 'outputs', filename);
+    const filePath = path.join('/tmp', 'outputs', filename);
 
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('파일을 찾을 수 없습니다.');
@@ -24,7 +24,7 @@ export class FilesController {
 
   @Get('download/:filename')
   downloadFile(@Param('filename') filename: string, @Res() res: Response) {
-    const filePath = path.join(process.cwd(), 'storage', 'outputs', filename);
+    const filePath = path.join('/tmp', 'outputs', filename);
 
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('파일을 찾을 수 없습니다.');

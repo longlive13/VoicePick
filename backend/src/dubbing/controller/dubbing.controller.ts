@@ -20,7 +20,7 @@ import { MediaService } from '../service/media.service';
 import { DubbingRequestDto } from '../dto/dubbing-request.dto';
 import { AuthGuard } from '../../auth/auth.guard';
 
-const uploadDir = path.join(process.cwd(), 'storage', 'uploads');
+const uploadDir = '/tmp/uploads';
 fs.mkdirSync(uploadDir, { recursive: true });
 
 @Controller('dubbing')
