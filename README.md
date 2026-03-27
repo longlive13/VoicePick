@@ -12,6 +12,7 @@ Google OAuth를 통한 인증 이후,
 프론트엔드와 백엔드를 분리하여 개발하였으며,
 인증, 파일 처리, AI API 연동, 데이터 저장까지
 실제 서비스 구조를 경험하는 것을 목표로 제작되었습니다.
+
 ---
 
 ## 2. 주요 기능
@@ -51,7 +52,7 @@ Google OAuth를 통한 인증 이후,
 
 ### Deployment
 
-* Vercel(Serverless)
+* Vercel (Serverless)
 
 ### Authentication
 
@@ -61,7 +62,7 @@ Google OAuth를 통한 인증 이후,
 
 ## 4. 프로젝트 구조
 
-
+```
 project-root
 ├─ frontend                 # Next.js (App Router 기반 프론트엔드)
 │  ├─ app                   # 페이지 및 라우팅
@@ -75,18 +76,18 @@ project-root
 │
 ├─ backend                 # NestJS 서버 (Vercel Serverless)
 │  ├─ src
-│  │  ├─ auth             # 인증 (JWT + Google 로그인 연동)
+│  │  ├─ auth
 │  │  │  ├─ auth.controller.ts
 │  │  │  ├─ auth.service.ts
 │  │  │  └─ auth.guard.ts
 │  │  │
-│  │  ├─ dubbing          # 더빙 기능 도메인
-│  │  │  ├─ controller    # 파일 업로드, 결과 조회 API
-│  │  │  ├─ service       # ffmpeg, STT, 번역, TTS 처리
+│  │  ├─ dubbing
+│  │  │  ├─ controller
+│  │  │  ├─ service
 │  │  │  ├─ dto
 │  │  │  └─ dubbing.module.ts
 │  │  │
-│  │  ├─ database         # Turso DB 연결
+│  │  ├─ database
 │  │  │  └─ database.service.ts
 │  │  │
 │  │  ├─ app.module.ts
@@ -115,19 +116,25 @@ project-root
 
 #### Frontend (`.env.local`)
 
-NEXTAUTH_URL
-NEXTAUTH_SECRET
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_secret
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
 #### Backend (`.env`)
 
-DATABASE_URL
-DATABASE_AUTH_TOKEN
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
+```env
+DATABASE_URL=your_turso_database_url
+DATABASE_AUTH_TOKEN=your_turso_auth_token
 
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+---
 
 ### 5-3. 프론트엔드 실행
 
@@ -135,9 +142,11 @@ GOOGLE_CLIENT_SECRET
 cd frontend
 npm install
 npm run dev
+```
 
 👉 http://localhost:3000
 
+---
 
 ### 5-4. 백엔드 실행
 
@@ -147,7 +156,7 @@ npm install
 npm run start:dev
 ```
 
-👉 http://localhost:3001 
+👉 http://localhost:3001
 
 ---
 
@@ -155,7 +164,6 @@ npm run start:dev
 
 * Frontend: https://voice-pick-real-frontend.vercel.app/
 * Backend: https://voice-pick-real-backend.vercel.app/
-
 
 ---
 
@@ -179,8 +187,11 @@ npm run start:dev
 5. 음성 합성 (TTS)
 6. 결과 파일 저장 및 반환
 
-### 7-3. 프론트 -> 백엔드 통신
+---
 
+### 7-3. 프론트 → 백엔드 통신
+
+```ts
 const session = await getSession();
 
 await fetch('http://localhost:3000/auth/google', {
@@ -196,7 +207,7 @@ await fetch('http://localhost:3000/auth/google', {
 
 ---
 
-### 7-3. Turso DB 연결
+### 7-4. Turso DB 연결
 
 ```ts
 import { createClient } from '@libsql/client';
@@ -209,8 +220,8 @@ export const db = createClient({
 
 * 로컬 DB → Turso 클라우드 DB로 전환
 * 환경변수를 통한 안전한 인증 처리
-* Vercel Serverless 환경에서 /tmp 디렉토리 사용
-* ffmpeg-static을 통해 서버 환경에서도 ffmpeg 실행 가능하도록 구성
+* Vercel Serverless 환경에서 `/tmp` 디렉토리 사용
+* `ffmpeg-static`을 통해 서버 환경에서도 ffmpeg 실행 가능
 * 환경변수를 통해 API 키 및 DB 연결 관리
 
 ---
@@ -235,29 +246,32 @@ export const db = createClient({
 
 ---
 
-### 트러블슈팅
+### 🔧 트러블슈팅
 
-### 문제 1. Vercel에서 파일 업로드 실패
-- **원인**  
-  서버리스 환경에서는 로컬 파일 시스템을 영구적으로 사용할 수 없음  
-- **해결**  
-  `/tmp` 디렉토리를 사용하도록 변경  
+#### 문제 1. Vercel에서 파일 업로드 실패
 
----
-
-### 문제 2. ffmpeg 실행 실패
-- **원인**  
-  Vercel 환경에 ffmpeg 바이너리가 기본적으로 포함되어 있지 않음  
-- **해결**  
-  `ffmpeg-static` 패키지를 사용하여 실행 경로를 설정  
+* **원인**
+  서버리스 환경에서는 로컬 파일 시스템을 영구적으로 사용할 수 없음
+* **해결**
+  `/tmp` 디렉토리를 사용하도록 변경
 
 ---
 
-### 문제 3. 업로드 파일 경로 오류
-- **원인**  
-  `/tmp/uploads` 와 `storage/uploads` 경로가 혼용되어 파일을 찾지 못함  
-- **해결**  
-  업로드 및 처리 경로를 `/tmp`로 통일  
+#### 문제 2. ffmpeg 실행 실패
+
+* **원인**
+  Vercel 환경에 ffmpeg 바이너리가 없음
+* **해결**
+  `ffmpeg-static` 패키지 사용
+
+---
+
+#### 문제 3. 업로드 파일 경로 오류
+
+* **원인**
+  `/tmp/uploads` 와 `storage/uploads` 경로 불일치
+* **해결**
+  경로를 `/tmp`로 통일
 
 ---
 
