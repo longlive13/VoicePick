@@ -1,98 +1,212 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🎙️ AI Dubbing Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 1. 서비스 소개
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+AI Dubbing Service는 사용자가 음성 또는 영상 데이터를 기반으로 더빙 작업을 관리할 수 있는 웹 서비스입니다.
+Google 로그인 기능을 통해 사용자 인증을 처리하고, 더빙 작업 정보를 데이터베이스에 저장하여 사용자별 작업을 관리할 수 있도록 구현했습니다.
 
-## Description
+프론트엔드와 백엔드를 분리하여 개발하였으며, 인증 → 데이터 저장 → 조회까지의 전체 흐름을 경험하는 것을 목표로 제작되었습니다.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 2. 주요 기능
 
-```bash
-$ npm install
+* Google OAuth 기반 로그인
+* 사용자 정보 저장 및 인증 처리
+* 더빙 작업 데이터 저장 및 조회
+* 프론트엔드 → 백엔드 API 연동
+* Turso DB 연동 (클라우드 환경 고려)
+* 환경변수 기반 설정 (배포 대응)
+
+---
+
+## 3. 기술 스택
+
+### Frontend
+
+* Next.js
+* TypeScript
+* React
+* NextAuth.js
+* Tailwind CSS
+
+### Backend
+
+* NestJS
+* TypeScript
+
+### Database
+
+* Turso (libSQL)
+
+### Deployment
+
+* Vercel
+
+### Authentication
+
+* Google OAuth
+
+---
+
+## 4. 프로젝트 구조
+
+```
+project-root
+├─ frontend
+│  ├─ app
+│  ├─ components
+│  ├─ lib
+│  └─ ...
+├─ backend
+│  ├─ src
+│  └─ ...
+└─ README.md
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 5. 로컬 실행 방법
 
-# watch mode
-$ npm run start:dev
+### 5-1. 사전 준비
 
-# production mode
-$ npm run start:prod
+* Node.js 18 이상
+* npm 또는 pnpm
+* Turso DB 생성 및 토큰 발급
+* Google OAuth Client ID / Secret
+
+---
+
+### 5-2. 환경변수 설정
+
+#### Frontend (`.env.local`)
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_secret
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-## Run tests
+#### Backend (`.env`)
 
-```bash
-# unit tests
-$ npm run test
+```env
+DATABASE_URL=your_turso_database_url
+DATABASE_AUTH_TOKEN=your_turso_auth_token
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 5-3. 프론트엔드 실행
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+cd frontend
+npm install
+npm run dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+👉 http://localhost:3000
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+### 5-4. 백엔드 실행
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+cd backend
+npm install
+npm run start:dev
+```
 
-## Support
+👉 http://localhost:3001 
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 6. 배포된 서비스 URL
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+* Frontend: https://voice-pick-real-frontend.vercel.app/
+* Backend: https://voice-pick-real-backend.vercel.app/
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 7. 주요 구현 내용
+
+### 7-1. Google 로그인 흐름
+
+1. NextAuth를 통해 Google 로그인 수행
+2. 로그인 후 session 정보 획득
+3. 사용자 email 정보를 백엔드로 전달
+4. 백엔드에서 사용자 저장 또는 조회
+
+---
+
+### 7-2. 프론트 → 백엔드 통신
+
+```ts
+const session = await getSession();
+
+await fetch('http://localhost:3000/auth/google', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    email: session.user.email,
+  }),
+});
+```
+
+---
+
+### 7-3. Turso DB 연결
+
+```ts
+import { createClient } from '@libsql/client';
+
+export const db = createClient({
+  url: process.env.DATABASE_URL!,
+  authToken: process.env.DATABASE_AUTH_TOKEN!,
+});
+```
+
+* 로컬 DB → Turso 클라우드 DB로 전환
+* 환경변수를 통한 안전한 인증 처리
+
+---
+
+## 8. 코딩 에이전트 활용 방법 및 노하우
+
+### 활용 내용
+
+* README 문서 초안 작성
+* 오류 원인 분석 (ffmpeg, env, API 연결 등)
+* Turso 연결 코드 구성
+* 프론트/백엔드 통신 흐름 설계
+
+---
+
+### 활용 노하우
+
+* 기능 단위로 질문 → 더 정확한 답변 가능
+* 에러 발생 시 로그 + 코드 함께 제공
+* AI 코드 그대로 사용하지 않고 구조에 맞게 수정
+* 문서화는 초안 생성 → 직접 검증 후 보완 방식 사용
+
+---
+
+## 9. 회고
+
+이 프로젝트를 통해 인증, API 통신, 데이터베이스 연동, 배포 환경 설정까지 전체적인 서비스 흐름을 경험했습니다.
+
+특히 로컬 환경에서 동작하던 서비스를 배포 환경에서도 안정적으로 동작하도록 수정하는 과정에서 환경변수 관리와 외부 DB 연동의 중요성을 이해하게 되었습니다.
+
+또한 AI 코딩 에이전트를 활용하여 개발 속도를 높일 수 있었지만, 최종적으로는 코드 검증과 구조 이해가 필수적이라는 점을 배울 수 있었습니다.
+
+---
+
+## 10. 문서 작성 방식
+
+※ 본 README는 AI 코딩 에이전트의 도움을 받아 초안을 작성한 뒤, 실제 프로젝트 구현 내용에 맞게 수정·보완하였습니다.
