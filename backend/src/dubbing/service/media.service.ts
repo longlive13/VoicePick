@@ -3,6 +3,7 @@ import { extname, basename, join } from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
+import ffmpegPath from 'ffmpeg-static';
 
 const execAsync = promisify(exec);
 
@@ -44,26 +45,47 @@ export class MediaService {
     const fileNameWithoutExt = basename(videoPath, extname(videoPath));
     const outputPath = join('/tmp', 'temp', `${fileNameWithoutExt}_extracted.mp3`);
 
-    const command = `ffmpeg -y -i "${videoPath}" -vn -acodec libmp3lame "${outputPath}"`;
+    if (!ffmpegPath) {
+      throw new BadRequestException('ffmpeg 경로를 찾을 수 없습니다.');
+    }
+
+    const command = `"${ffmpegPath}" -y -i "${videoPath}" -vn -acodec libmp3lame "${outputPath}"`;
 
     try {
-      await execAsync(command);
+      const result = await execAsync(command);
+      console.log('ffmpeg extract stdout:', result.stdout);
+      console.log('ffmpeg extract stderr:', result.stderr);
       return outputPath;
-    } catch {
-      throw new BadRequestException('비디오에서 오디오 추출에 실패했습니다.');
+    } catch (error: any) {
+      console.error('ffmpeg extract error:', error);
+      console.error('ffmpeg extract stderr:', error?.stderr);
+      throw new BadRequestException(
+        `비디오에서 오디오 추출에 실패했습니다. ${error?.stderr || error?.message || ''}`,
+      );
     }
   }
 
   private async cropAudio(inputPath: string): Promise<string> {
     const fileNameWithoutExt = basename(inputPath, extname(inputPath));
     const outputPath = join('/tmp', 'temp', `${fileNameWithoutExt}_cropped.mp3`);
-    const command = `ffmpeg -y -i "${inputPath}" -t 60 "${outputPath}"`;
+
+    if (!ffmpegPath) {
+      throw new BadRequestException('ffmpeg 경로를 찾을 수 없습니다.');
+    }
+
+    const command = `"${ffmpegPath}" -y -i "${inputPath}" -t 60 "${outputPath}"`;
 
     try {
-      await execAsync(command);
+      const result = await execAsync(command);
+      console.log('ffmpeg crop stdout:', result.stdout);
+      console.log('ffmpeg crop stderr:', result.stderr);
       return outputPath;
-    } catch {
-      throw new BadRequestException('오디오 자르기에 실패했습니다.');
+    } catch (error: any) {
+      console.error('ffmpeg crop error:', error);
+      console.error('ffmpeg crop stderr:', error?.stderr);
+      throw new BadRequestException(
+        `오디오 자르기에 실패했습니다. ${error?.stderr || error?.message || ''}`,
+      );
     }
   }
 }
