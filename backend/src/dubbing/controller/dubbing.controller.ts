@@ -12,10 +12,16 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { DubbingService } from '../service/dubbing.service';
 import { MediaService } from '../service/media.service';
 import { DubbingRequestDto } from '../dto/dubbing-request.dto';
 import { AuthGuard } from '../../auth/auth.guard';
+
+const uploadDir = path.join(process.cwd(), 'storage', 'uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
 
 @Controller('dubbing')
 export class DubbingController {
@@ -28,6 +34,7 @@ export class DubbingController {
   async testDb() {
     return this.dubbingService.testDb();
   }
+
   @Get(':id')
   async getDubbingResult(@Param('id', ParseIntPipe) id: number) {
     return this.dubbingService.getDubbingResultById(id);
@@ -38,7 +45,7 @@ export class DubbingController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './storage/uploads',
+        destination: uploadDir,
         filename: (req, file, cb) => {
           const mediaService = new MediaService();
           const savedFilename = mediaService.createUploadFilename(
