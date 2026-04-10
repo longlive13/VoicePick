@@ -13,6 +13,11 @@ Google OAuth를 통한 인증 이후,
 인증, 파일 처리, AI API 연동, 데이터 저장까지
 실제 서비스 구조를 경험하는 것을 목표로 제작되었습니다.
 
+![로그인화면](https://github.com/user-attachments/assets/3fbf4fea-cda8-4d7a-b879-9349373ba522)
+![더빙1](https://github.com/user-attachments/assets/bcc51074-1592-4bcc-b9f7-38d85c56a8bf)
+
+
+
 ---
 
 ## 2. 주요 기능
